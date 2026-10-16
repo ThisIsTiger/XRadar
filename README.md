@@ -21,6 +21,10 @@ XRadar is a lightweight, native macOS menu bar application that monitors X (Twit
   - **Xcode 15+** (also runs the `XCTest` suite via `swift test`), or
   - The **Swift.org Swift 6.3 toolchain** (sufficient for `swift build` / `swift test` in a headless / CI environment where Xcode is not installed)
 
+> The Liquid Glass visuals (`glassEffect`) require the **macOS 26 SDK**
+> (Xcode 26+). On older toolchains/systems the UI automatically falls back to
+> `ultraThinMaterial`; nothing else changes.
+
 ## Installation
 
 ### Option 1: Build from Source (recommended)

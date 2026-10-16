@@ -63,8 +63,9 @@ notifications and/or Telegram.
   `scripts/test.sh` / `scripts/verify.sh` fall back to it when
   `XCTest.framework` is unavailable.
 - **Visual refresh (Liquid Glass)**: a shared `GlassStyle` material set — system
-  `glassEffect` on macOS 26+, `ultraThinMaterial` fallback on older systems —
-  used for the status badge, menu bar cards, settings forms, and history lists.
+  `glassEffect` on macOS 26+ (built with the macOS 26 SDK, Xcode 26+),
+  `ultraThinMaterial` fallback otherwise — used for the status badge, menu bar
+  cards, settings forms, and history lists.
 - **Menu bar status**: the status line links straight to the relevant settings
   tab and shows the next scheduled check (`下次检查 ≈HH:mm`), including the real
   backoff deadline.
