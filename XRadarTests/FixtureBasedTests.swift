@@ -89,10 +89,11 @@ final class FixtureBasedTests: XCTestCase {
     }
 
     func testRepliesDetection() async throws {
-        // This tests the reply detection logic
+        // X renders the reply line as `data-testid="reply"` (social context, by
+        // contrast, means a repost/quote), which is what the extractor reads.
         let html = """
         <article data-testid="tweet">
-            <div data-testid="socialContext">Replying to @elonmusk</div>
+            <div data-testid="reply">Replying to @elonmusk</div>
             <div data-testid="tweetText">Thanks!</div>
             <a href="/testuser/status/123"><time datetime="2026-07-22T10:00:00Z"></time></a>
         </article>
@@ -100,9 +101,9 @@ final class FixtureBasedTests: XCTestCase {
 
         let records = try await extractTweets(from: html)
 
-        if let reply = records.first {
-            XCTAssertEqual(reply.replyingToText, "Replying to @elonmusk")
-        }
+        let reply = try XCTUnwrap(records.first)
+        XCTAssertEqual(reply.replyingToText, "Replying to @elonmusk")
+        XCTAssertEqual(reply.toTweet()?.kind, .reply)
     }
 
     func testPinnedTweetDetection() async throws {
@@ -116,8 +117,7 @@ final class FixtureBasedTests: XCTestCase {
 
         let records = try await extractTweets(from: html)
 
-        if let pinned = records.first {
-            XCTAssertTrue(pinned.isPinned)
-        }
+        let pinned = try XCTUnwrap(records.first)
+        XCTAssertTrue(pinned.isPinned)
     }
 }
