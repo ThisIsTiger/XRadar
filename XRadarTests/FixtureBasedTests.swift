@@ -33,30 +33,29 @@ final class FixtureBasedTests: XCTestCase {
     }
 
     func extractTweets(from html: String) async throws -> [RawTweetDOMRecord] {
-        // Inject the extraction script into the HTML
+        // Inject the extraction script into the HTML (mirrors production, which
+        // injects the same script before reading the DOM).
         let fullHTML = html.replacingOccurrences(of: "</body>", with: "<script>\(XDOMSelectors.tweetExtractionScript(maxTweets: 50))</script></body>")
 
-        return await withCheckedContinuation { continuation in
-            webView.loadHTMLString(fullHTML, baseURL: nil)
+        _ = webView.loadHTMLString(fullHTML, baseURL: nil)
 
-            // Wait for page load then extract
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                guard let self = self else {
-                    continuation.resume(returning: [])
-                    return
-                }
-
-                self.webView.evaluateJavaScript(XDOMSelectors.tweetExtractionScript(maxTweets: 50)) { result, error in
-                    guard let jsonString = result as? String,
-                          let data = jsonString.data(using: .utf8),
-                          let records = try? JSONDecoder().decode([RawTweetDOMRecord].self, from: data) else {
-                        continuation.resume(returning: [])
-                        return
-                    }
-                    continuation.resume(returning: records)
-                }
-            }
+        // `loadHTMLString` is asynchronous: wait until the document is parsed
+        // before querying the DOM, otherwise a slow (CI) runner extracts from
+        // an empty document and returns zero records.
+        let deadline = Date().addingTimeInterval(15)
+        while Date() < deadline {
+            let readyState = try? await webView.evaluateJavaScript("document.readyState") as? String
+            if readyState == "complete" { break }
+            try? await Task.sleep(nanoseconds: 100_000_000)
         }
+
+        let result = try? await webView.evaluateJavaScript(XDOMSelectors.tweetExtractionScript(maxTweets: 50))
+        guard let jsonString = result as? String,
+              let data = jsonString.data(using: .utf8),
+              let records = try? JSONDecoder().decode([RawTweetDOMRecord].self, from: data) else {
+            return []
+        }
+        return records
     }
 
     // MARK: - Tests
