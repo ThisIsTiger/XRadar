@@ -41,10 +41,13 @@ final class SchedulerReentrancyTests: XCTestCase {
     }
 
     func testOnlyOneRunCheckInFlight() async {
-        // Fire a burst of concurrent checks.
+        // Fire a burst of concurrent checks. `PollScheduler` is an actor, so it
+        // can be captured by the @Sendable task closure without capturing the
+        // (non-Sendable) test instance.
+        let scheduler = self.scheduler!
         await withTaskGroup(of: Void.self) { group in
             for _ in 0..<12 {
-                group.addTask { await self.scheduler.runCheck(reason: .manual) }
+                group.addTask { await scheduler.runCheck(reason: .manual) }
             }
         }
 

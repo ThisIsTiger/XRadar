@@ -24,7 +24,7 @@ final class MonitoringPipelineMockTests: XCTestCase {
         mockMacOSNotifier = MockNotificationChannel(id: .macOS)
         mockTelegramNotifier = MockNotificationChannel(id: .telegram)
 
-        let notificationGateway = await NotificationGateway(
+        let notificationGateway = NotificationGateway(
             channels: [mockMacOSNotifier as any NotificationChannel, mockTelegramNotifier as any NotificationChannel]
         )
 
@@ -94,7 +94,7 @@ final class MonitoringPipelineMockTests: XCTestCase {
             lastErrorCode: nil
         )
 
-        let result = await pipeline.runCheck(
+        _ = await pipeline.runCheck(
             reason: .scheduled,
             rules: [keywordRule],
             accountCursors: ["testuser": cursor],
@@ -249,7 +249,7 @@ final class MonitoringPipelineMockTests: XCTestCase {
             ),
             ruleEngine: RuleEngine(),
             eventRepository: EventRepository(),
-            notificationGateway: await NotificationGateway(
+            notificationGateway: NotificationGateway(
                 channels: [mockMacOSNotifier as any NotificationChannel, mockTelegramNotifier as any NotificationChannel]
             ),
             feedProvider: feedProvider
@@ -317,7 +317,7 @@ final class MonitoringPipelineMockTests: XCTestCase {
             ),
             ruleEngine: RuleEngine(),
             eventRepository: EventRepository(),
-            notificationGateway: await NotificationGateway(
+            notificationGateway: NotificationGateway(
                 channels: [mockMacOSNotifier as any NotificationChannel, mockTelegramNotifier as any NotificationChannel]
             ),
             feedProvider: feedProvider
