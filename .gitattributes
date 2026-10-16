@@ -1,0 +1,13 @@
+# Normalize line endings; keep binaries untouched.
+* text=auto eol=lf
+
+*.swift   text
+*.md      text
+*.sh      text eol=lf
+*.yml     text
+*.json    text
+
+*.png     binary
+*.icns    binary
+*.zip     binary
+*.pdf     binary

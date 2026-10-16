@@ -1,0 +1,53 @@
+#!/bin/bash
+#
+# XRadar pre-commit hook — minimal verification (build + test).
+#
+# Enable with:
+#   git config core.hooksPath .githooks
+#
+# Skip for a single commit with:
+#   git commit --no-verify
+#
+set -uo pipefail
+
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$PROJECT_DIR"
+
+SWIFT="$(command -v swift || echo /usr/bin/swift)"
+FAIL=0
+
+echo "[pre-commit] Running XRadar core checks (build + test)…"
+
+# --- 1. Debug build ---
+echo "[pre-commit] 1/2 Debug build…"
+if $SWIFT build --disable-sandbox -j 4 > /tmp/xradar_precommit_build.log 2>&1; then
+    echo "[pre-commit] ✓ Debug build succeeded"
+else
+    echo "[pre-commit] ✗ Debug build failed:"
+    tail -n 20 /tmp/xradar_precommit_build.log
+    FAIL=1
+fi
+
+# --- 2. Tests (XRadarVerifier) ---
+if [[ $FAIL -eq 0 ]]; then
+    echo "[pre-commit] 2/2 Tests (XRadarVerifier)…"
+    if $SWIFT build --disable-sandbox -j 4 --product XRadarVerifier > /tmp/xradar_precommit_verifier_build.log 2>&1 \
+       && ./.build/debug/XRadarVerifier > /tmp/xradar_precommit_verifier.log 2>&1; then
+        echo "[pre-commit] ✓ All tests passed"
+    else
+        echo "[pre-commit] ✗ Tests failed:"
+        tail -n 30 /tmp/xradar_precommit_verifier.log
+        FAIL=1
+    fi
+fi
+
+# --- Result ---
+if [[ $FAIL -ne 0 ]]; then
+    echo ""
+    echo "[pre-commit] FAILED — commit blocked."
+    echo "[pre-commit] Fix the issues above, or use 'git commit --no-verify' to skip."
+    exit 1
+fi
+
+echo "[pre-commit] All checks passed."
+exit 0

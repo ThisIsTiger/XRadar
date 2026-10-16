@@ -1,0 +1,28 @@
+# Build artifacts
+.build/
+dist/
+DerivedData/
+
+# OS files
+.DS_Store
+
+# IDE
+*.xcuserstate
+xcuserdata/
+
+# Qoder analysis output
+.qoder/
+
+# Temporary
+.tigerwork/
+/tmp/
+
+# Internal development-process notes (kept locally, not published)
+/GOAL.md
+/PROGRESS.md
+/BUILD_STATUS.md
+/FINAL_REPORT.md
+/FINAL_VERIFICATION.md
+/COMPLETE_VERIFICATION.md
+/VERIFICATION_CHECKLIST.md
+/README.txt
