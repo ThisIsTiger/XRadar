@@ -1,0 +1,51 @@
+<!-- X Profile Fixture: Original Tweets Only -->
+<!-- @dsCard group="Fixtures" -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test User (@testuser) / X</title>
+</head>
+<body>
+    <div data-testid="primaryColumn">
+        <!-- Tweet 1: Standard text tweet -->
+        <article data-testid="tweet" tabindex="0">
+            <div>
+                <a href="/testuser/status/1234567890" role="link">
+                    <time datetime="2026-07-22T10:00:00.000Z">Jul 22</time>
+                </a>
+            </div>
+            <div data-testid="tweetText">
+                <span>Just shipped a new feature! 🚀 #excited</span>
+            </div>
+            <div data-testid="tweet" style="display:none">Retweeted</div>
+        </article>
+
+        <!-- Tweet 2: Tweet with image (no text) -->
+        <article data-testid="tweet" tabindex="0">
+            <div>
+                <a href="/testuser/status/1234567891" role="link">
+                    <time datetime="2026-07-22T09:30:00.000Z">Jul 22</time>
+                </a>
+            </div>
+            <div data-testid="tweetText">
+                <span></span>
+            </div>
+            <div data-testid="tweetPhoto">
+                <img src="test.jpg" alt="Image">
+            </div>
+        </article>
+
+        <!-- Tweet 3: Mention tweet -->
+        <article data-testid="tweet" tabindex="0">
+            <div>
+                <a href="/testuser/status/1234567892" role="link">
+                    <time datetime="2026-07-21T15:00:00.000Z">Jul 21</time>
+                </a>
+            </div>
+            <div data-testid="tweetText">
+                <span>Great work @elonmusk on the Starship launch!</span>
+            </div>
+        </article>
+    </div>
+</body>
+</html>

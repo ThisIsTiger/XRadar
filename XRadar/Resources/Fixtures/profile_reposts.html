@@ -1,0 +1,53 @@
+<!-- X Profile Fixture: With Reposts -->
+<!-- @dsCard group="Fixtures" -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test User (@testuser) / X</title>
+</head>
+<body>
+    <div data-testid="primaryColumn">
+        <!-- Repost 1: User reposted someone else -->
+        <article data-testid="tweet" tabindex="0">
+            <div data-testid="socialContext">
+                <span>Test User reposted</span>
+            </div>
+            <div>
+                <a href="/elonmusk/status/1234567893" role="link">
+                    <time datetime="2026-07-22T08:00:00.000Z">Jul 22</time>
+                </a>
+            </div>
+            <div data-testid="tweetText">
+                <span>Mars mission update coming soon</span>
+            </div>
+        </article>
+
+        <!-- Original tweet -->
+        <article data-testid="tweet" tabindex="0">
+            <div>
+                <a href="/testuser/status/1234567890" role="link">
+                    <time datetime="2026-07-22T10:00:00.000Z">Jul 22</time>
+                </a>
+            </div>
+            <div data-testid="tweetText">
+                <span>Working on something exciting today</span>
+            </div>
+        </article>
+
+        <!-- Repost 2: Quote repost -->
+        <article data-testid="tweet" tabindex="0">
+            <div data-testid="socialContext">
+                <span>Test User reposted with comment</span>
+            </div>
+            <div data-testid="tweetText">
+                <span>This is huge news!</span>
+            </div>
+            <div>
+                <a href="/nasa/status/1234567894" role="link">
+                    <time datetime="2026-07-21T20:00:00.000Z">Jul 21</time>
+                </a>
+            </div>
+        </article>
+    </div>
+</body>
+</html>

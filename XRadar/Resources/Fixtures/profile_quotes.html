@@ -1,0 +1,43 @@
+<!-- X Profile Fixture: Tweet with Quote Tweet -->
+<!-- @dsCard group="Fixtures" -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test User (@testuser) / X</title>
+</head>
+<body>
+    <div data-testid="primaryColumn">
+        <!-- Tweet 1: Quote tweet -->
+        <article data-testid="tweet" tabindex="0">
+            <div>
+                <a href="/testuser/status/1236000000" role="link">
+                    <time datetime="2026-07-22T12:00:00.000Z">Jul 22</time>
+                </a>
+            </div>
+            <div data-testid="tweetText">
+                <span>This is important, everyone should see this</span>
+            </div>
+            <div data-testid="quotedTweet">
+                <div>@elonmusk · Jul 22</div>
+                <div>Starship launch successful! 🚀</div>
+            </div>
+        </article>
+
+        <!-- Tweet 2: Standard retweet with comment (quote) -->
+        <article data-testid="tweet" tabindex="0">
+            <div>
+                <a href="/testuser/status/1236000001" role="link">
+                    <time datetime="2026-07-22T11:30:00.000Z">Jul 22</time>
+                </a>
+            </div>
+            <div data-testid="tweetText">
+                <span>Agree with this sentiment</span>
+            </div>
+            <div data-testid="quotedTweet">
+                <div>@naval · Jul 21</div>
+                <div>Play long-term games with long-term people.</div>
+            </div>
+        </article>
+    </div>
+</body>
+</html>

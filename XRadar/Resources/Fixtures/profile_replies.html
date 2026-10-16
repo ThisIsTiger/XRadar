@@ -1,0 +1,49 @@
+<!-- X Profile Fixture: Tweets with Replies -->
+<!-- @dsCard group="Fixtures" -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test User (@testuser) / X</title>
+</head>
+<body>
+    <div data-testid="primaryColumn">
+        <!-- Tweet 1: Reply to another user -->
+        <article data-testid="tweet" tabindex="0">
+            <div>
+                <a href="/testuser/status/1235000000" role="link">
+                    <time datetime="2026-07-22T11:00:00.000Z">Jul 22</time>
+                </a>
+            </div>
+            <div data-testid="tweetText">
+                <span>@elonmusk Thanks for the update!</span>
+            </div>
+            <div data-testid="reply">Replying to @elonmusk</div>
+        </article>
+
+        <!-- Tweet 2: Self-reply thread -->
+        <article data-testid="tweet" tabindex="0">
+            <div>
+                <a href="/testuser/status/1235000001" role="link">
+                    <time datetime="2026-07-22T10:30:00.000Z">Jul 22</time>
+                </a>
+            </div>
+            <div data-testid="tweetText">
+                <span>Part 2 of my thread: here's more details...</span>
+            </div>
+            <div data-testid="reply">Replying to @testuser</div>
+        </article>
+
+        <!-- Tweet 3: Original tweet (not reply) -->
+        <article data-testid="tweet" tabindex="0">
+            <div>
+                <a href="/testuser/status/1235000002" role="link">
+                    <time datetime="2026-07-22T09:00:00.000Z">Jul 22</time>
+                </a>
+            </div>
+            <div data-testid="tweetText">
+                <span>New announcement coming soon!</span>
+            </div>
+        </article>
+    </div>
+</body>
+</html>
