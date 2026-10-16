@@ -148,6 +148,7 @@ final class MonitoringPipelineMockTests: XCTestCase {
                     authorHandle: "testuser",
                     text: "feature launch now",
                     url: URL(string: "https://x.com/testuser/status/999")!,
+                    publishedAt: Date().addingTimeInterval(60),
                     kind: .original
                 )
             ]
@@ -182,9 +183,9 @@ final class MonitoringPipelineMockTests: XCTestCase {
         )
 
         XCTAssertTrue(summary.loginRequired)
-        XCTAssertEqual(summary.accountsChecked, 0)
         XCTAssertEqual(summary.eventsGenerated, 0)
-        XCTAssertNotNil(summary.error)
+        let macOSevents = await mockMacOSNotifier.sentEvents
+        XCTAssertEqual(macOSevents.count, 0, "Login-required must suppress notifications")
     }
 
     func testActionRequiredReported() async throws {

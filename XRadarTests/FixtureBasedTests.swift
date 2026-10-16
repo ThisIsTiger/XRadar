@@ -25,8 +25,7 @@ final class FixtureBasedTests: XCTestCase {
     // MARK: - Helper
 
     func loadFixture(named name: String) async throws -> String {
-        let bundle = Bundle(for: type(of: self))
-        guard let url = bundle.url(forResource: name, withExtension: "html", subdirectory: "Fixtures"),
+        guard let url = Bundle.module.url(forResource: name, withExtension: "html", subdirectory: "Fixtures"),
               let html = try? String(contentsOf: url, encoding: .utf8) else {
             throw NSError(domain: "FixtureTests", code: 1, userInfo: [NSLocalizedDescriptionKey: "Fixture \(name) not found"])
         }

@@ -38,6 +38,7 @@ let package = Package(
             name: "XRadarTests",
             dependencies: ["XRadarCore"],
             path: "XRadarTests",
+            resources: [.copy("Fixtures")],
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency")
             ]

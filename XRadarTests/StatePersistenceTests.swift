@@ -46,13 +46,17 @@ final class StatePersistenceTests: XCTestCase {
     }
 
     func testCorruptMainFileFallsBackToBackup() async throws {
-        // Write a valid baseline, then corrupt the main file. The `.bak` is
-        // still valid JSON so recovery should succeed.
+        // Write twice: the first write lands in `state.json`, the second rotates
+        // it into `state.json.bak` (a single write produces no backup).
         try await store.write(RuntimeState.default, to: "state.json")
+        var state = RuntimeState.default
+        state.isPaused = true
+        try await store.write(state, to: "state.json")
+        let _ = try "this is not json {{{".write(
+            to: tempDir.appendingPathComponent("state.json"), atomically: true, encoding: .utf8
+        )
 
-        let url = tempDir.appendingPathComponent("state.json")
-        let _ = try "this is not json {{{".write(to: url, atomically: true, encoding: .utf8)
-
+        // The `.bak` still holds the previous good version, so recovery succeeds.
         let read = await store.read(RuntimeState.self, from: "state.json")
         XCTAssertNotNil(read, "Should recover from the .bak backup when the main file is corrupt")
     }

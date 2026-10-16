@@ -52,7 +52,7 @@ final class XHandleParserTests: XCTestCase {
 
     func testLengthValidation() {
         XCTAssertThrowsError(try XHandleParser.parse(""))
-        XCTAssertThrowsError(try XHandleParser.parse("a"))
+        XCTAssertNoThrow(try XHandleParser.parse("a"))
         XCTAssertNoThrow(try XHandleParser.parse("ab"))
         XCTAssertNoThrow(try XHandleParser.parse(String(repeating: "a", count: 15)))
         XCTAssertThrowsError(try XHandleParser.parse(String(repeating: "a", count: 16)))

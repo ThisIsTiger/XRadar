@@ -247,6 +247,8 @@ func checkAccountURLParsing() -> String? {
     let cases: [(input: String, expected: String)] = [
         ("https://x.com/TestUser", "testuser"),
         ("https://twitter.com/RealDonald", "realdonald"),
+        ("x.com/BareHost", "barehost"),
+        ("twitter.com/NoScheme", "noscheme"),
         ("@natfriedman", "natfriedman"),
         ("NatFriedman", "natfriedman"),
         ("https://x.com/home", "__throw__"),

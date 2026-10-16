@@ -48,7 +48,8 @@ final class RSSParserTests: XCTestCase {
             now: now
         )
         XCTAssertEqual(result.tweets.count, 2)
-        XCTAssertEqual(result.rawItemCount, 3)
+        // rawItemCount 为 ID 去重后、窗口/截取/排除前的有效条目数：两条重复 ID 计一条。
+        XCTAssertEqual(result.rawItemCount, 2)
 
         let reply = try XCTUnwrap(result.tweets.first { $0.id == String(replyID) })
         XCTAssertEqual(reply.kind, .reply)

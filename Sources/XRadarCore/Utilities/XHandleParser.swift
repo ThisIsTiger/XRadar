@@ -15,6 +15,12 @@ public enum XHandleParser {
             input = String(input.dropFirst())
         }
 
+        // Bare host URLs without a scheme (x.com/handle, twitter.com/handle)
+        if !input.contains("://"),
+           input.range(of: #"^(www\.)?(x|twitter)\.com/"#, options: [.regularExpression, .caseInsensitive]) != nil {
+            input = "https://" + input
+        }
+
         // Handle URLs
         if let url = URL(string: input),
            let host = url.host?.lowercased(),
