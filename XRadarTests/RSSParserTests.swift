@@ -252,7 +252,6 @@ final class RSSParserTests: XCTestCase {
 
     func testGenericCapsAndExclusion() throws {
         let now = Date()
-        let recent = Date(timeIntervalSince1970: now.addingTimeInterval(-1 * 24 * 60 * 60).timeIntervalSince1970.rounded())
         let f = DateFormatter()
         f.locale = Locale(identifier: "en_US_POSIX")
         f.timeZone = TimeZone(identifier: "GMT")

@@ -8,7 +8,7 @@ import WebKit
 
 @MainActor
 final class FixtureBasedTests: XCTestCase {
-    var webView: WKWebView!
+    nonisolated(unsafe) var webView: WKWebView!
 
     override func setUp() {
         super.setUp()
@@ -72,7 +72,7 @@ final class FixtureBasedTests: XCTestCase {
         if let first = records.first {
             XCTAssertEqual(first.id, "1234567890")
             XCTAssertEqual(first.authorHandle, "testuser")
-            XCTAssertTrue(first.text?.contains("shipped") ?? false)
+            XCTAssertTrue(first.text.contains("shipped"))
             XCTAssertFalse(first.hasSocialContext)
         }
     }

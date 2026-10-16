@@ -3,14 +3,14 @@
 import XCTest
 @testable import XRadarCore
 
-private final class MockURLProtocol: URLProtocol {
+private final class RSSHubMockURLProtocol: URLProtocol {
     nonisolated(unsafe) static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data))?
 
     override class func canInit(with request: URLRequest) -> Bool { true }
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
 
     override func startLoading() {
-        guard let handler = MockURLProtocol.requestHandler else {
+        guard let handler = RSSHubMockURLProtocol.requestHandler else {
             client?.urlProtocol(self, didFailWithError: NSError(domain: "Mock", code: -1))
             return
         }
@@ -35,7 +35,7 @@ final class RSSHubClientTests: XCTestCase {
 
     private func makeClient(expectedHosts: Set<String> = []) -> RSSHubHTTPClient {
         let config = URLSessionConfiguration.ephemeral
-        config.protocolClasses = [MockURLProtocol.self]
+        config.protocolClasses = [RSSHubMockURLProtocol.self]
         return RSSHubHTTPClient(sessionConfiguration: config, expectedHosts: expectedHosts)
     }
 
@@ -62,7 +62,7 @@ final class RSSHubClientTests: XCTestCase {
     }
 
     func testHTTP304MapsToNotModified() async throws {
-        MockURLProtocol.requestHandler = { request in
+        RSSHubMockURLProtocol.requestHandler = { request in
             let response = HTTPURLResponse(url: request.url!, statusCode: 304, httpVersion: nil, headerFields: ["ETag": "\"x\""])!
             return (response, Data())
         }
@@ -72,7 +72,7 @@ final class RSSHubClientTests: XCTestCase {
     }
 
     func testHTTP429ReadsRetryAfter() async {
-        MockURLProtocol.requestHandler = { request in
+        RSSHubMockURLProtocol.requestHandler = { request in
             let response = HTTPURLResponse(url: request.url!, statusCode: 429, httpVersion: nil, headerFields: ["Retry-After": "900"])!
             return (response, Data())
         }

@@ -50,6 +50,7 @@ actor MockKeychainStore: KeychainStoreProtocol {
     func saveTelegramBotToken(_ token: String) async throws { self.token = token }
     func saveTelegramChatID(_ chatID: String) async throws { self.chatID = chatID }
     func deleteTelegramCredentials() async throws { token = nil; chatID = nil }
+    func setToken(_ value: String?) { token = value }
 }
 
 final class TelegramNotifierTests: XCTestCase {
@@ -142,7 +143,7 @@ final class TelegramNotifierTests: XCTestCase {
     }
 
     func testSendMissingCredentials() async {
-        await keychain.token = nil
+        await keychain.setToken(nil)
         let session = makeSession { req in
             let resp = HTTPURLResponse(url: req.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
             return (resp, Data())

@@ -12,7 +12,7 @@ actor MockMonitoringPipeline: MonitoringPipelineType {
     var activeCount = 0
     var maxConcurrent = 0
     var lastRules: [MonitorRule] = []
-    var lastCursors: [String: AccountCursor] = []
+    var lastCursors: [String: AccountCursor] = [:]
     var lastSourceSettings: XSourceSettings = .default
 
     func setNextSummary(_ summary: PollRunSummary?) async {

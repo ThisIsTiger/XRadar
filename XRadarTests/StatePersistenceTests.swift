@@ -51,7 +51,7 @@ final class StatePersistenceTests: XCTestCase {
         try await store.write(RuntimeState.default, to: "state.json")
 
         let url = tempDir.appendingPathComponent("state.json")
-        let _ = "this is not json {{{".write(to: url, atomically: true, encoding: .utf8)
+        let _ = try "this is not json {{{".write(to: url, atomically: true, encoding: .utf8)
 
         let read = await store.read(RuntimeState.self, from: "state.json")
         XCTAssertNotNil(read, "Should recover from the .bak backup when the main file is corrupt")
@@ -59,7 +59,7 @@ final class StatePersistenceTests: XCTestCase {
 
     func testCorruptWithNoBackupReturnsNil() async throws {
         let url = tempDir.appendingPathComponent("state.json")
-        let _ = "garbage".write(to: url, atomically: true, encoding: .utf8)
+        let _ = try "garbage".write(to: url, atomically: true, encoding: .utf8)
 
         let read = await store.read(RuntimeState.self, from: "state.json")
         XCTAssertNil(read, "No valid file and no backup should yield nil (caller uses .default)")
