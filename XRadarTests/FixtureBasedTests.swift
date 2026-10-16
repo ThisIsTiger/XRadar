@@ -8,19 +8,6 @@ import WebKit
 
 @MainActor
 final class FixtureBasedTests: XCTestCase {
-    nonisolated(unsafe) var webView: WKWebView!
-
-    override func setUp() {
-        super.setUp()
-        let config = WKWebViewConfiguration()
-        config.websiteDataStore = .nonPersistent()
-        webView = WKWebView(frame: .zero, configuration: config)
-    }
-
-    override func tearDown() {
-        webView = nil
-        super.tearDown()
-    }
 
     // MARK: - Helper
 
@@ -33,19 +20,29 @@ final class FixtureBasedTests: XCTestCase {
     }
 
     func extractTweets(from html: String) async throws -> [RawTweetDOMRecord] {
+        // WebKit must be driven on the main actor. Creating the web view in
+        // `setUp()` does not work: `setUp()` is nonisolated (it overrides a
+        // nonisolated superclass method), so the object would be built outside
+        // the actor. Build it here instead.
+        let config = WKWebViewConfiguration()
+        config.websiteDataStore = .nonPersistent()
+        let webView = WKWebView(frame: .zero, configuration: config)
+
         // Inject the extraction script into the HTML (mirrors production, which
         // injects the same script before reading the DOM).
         let fullHTML = html.replacingOccurrences(of: "</body>", with: "<script>\(XDOMSelectors.tweetExtractionScript(maxTweets: 50))</script></body>")
 
-        _ = webView.loadHTMLString(fullHTML, baseURL: nil)
+        // A fresh WKWebView already reports `document.readyState == "complete"`
+        // for its initial `about:blank` document, so readyState cannot signal
+        // that OUR document committed. Load with a base URL and wait for the
+        // document URL to change instead.
+        let baseURL = URL(string: "https://x.com/testuser")
+        _ = webView.loadHTMLString(fullHTML, baseURL: baseURL)
 
-        // `loadHTMLString` is asynchronous: wait until the document is parsed
-        // before querying the DOM, otherwise a slow (CI) runner extracts from
-        // an empty document and returns zero records.
         let deadline = Date().addingTimeInterval(15)
         while Date() < deadline {
-            let readyState = try? await webView.evaluateJavaScript("document.readyState") as? String
-            if readyState == "complete" { break }
+            let href = try? await webView.evaluateJavaScript("document.location.href")
+            if let href = href as? String, href.hasPrefix("https://x.com/") { break }
             try? await Task.sleep(nanoseconds: 100_000_000)
         }
 
